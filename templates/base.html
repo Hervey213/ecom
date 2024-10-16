@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      {% load static %}
+    <link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>-->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <title>Fnac</title>
+
+</head>
+
+<body>
+    <!-- ====== Header ====== -->
+    
+    <header class="navbar e-flex">
+          <div class="logo">
+            <a href="{% url "index" %}"><img src="{% static 'images/logoac.png' %}" alt="logo"></a>
+          </div>
+          <div class="nav-list">
+                  <a href="{% url "index" %}">Accueil</a>
+                  <a href="">Produits</a>
+                  
+                  <div class="dropdown"> 
+                    <a href="#">Compte</a>
+                      <div class="info-popup" id="user-info">
+                          {% if user.is_authenticated %}
+                              {{ user.username }}<br />
+                              <a href="{% url 'logout' %}">Déconnexion</a>
+                          {% else %}
+                              <a href="{% url 'login' %}">Connexion</a><br />
+                              <a href="{% url 'signup' %}">S'inscrire</a>
+                          {% endif %}
+                      </div>
+                  </div>
+                  <div class="dropdown">
+                      <img src="{% static 'images/cart.png' %}" alt="" style="max-width: 30px;">
+                          <span></span>
+                          <div class="info-popup" id="cart-info">
+                              {% if user.cart %}
+                                  <a href="{% url 'cart' %}">Voir le panier ({{ user.cart.orders.count }})</a>
+                              {% else %}
+                                  <span>Votre panier est vide</span>
+                              {% endif %}
+                          </div>
+                  </div>
+              <div class="close"><i class="bx bx-x"></i></div>
+              
+              
+          </div>
+          <div class="open"><i class="bx bx-menu-alt-right"></i></div>
+      </header>
+    
+
+
+      {% block content %}{% endblock  %}
+
+
+      <div class="footer">
+        <div class="container">
+            <div class="footer-column">
+                <h4>About the store</h4>
+                <p>Acadia Informatique est votre spécialiste de la vente de matériels électroniques. Nous proposons une large gamme de produits de qualité pour tous.</p>
+            </div>
+            
+            <div class="footer-column">
+                <h4>My account</h4>
+                <ul>
+                    <li><a href="#">My orders</a></li>
+                    <li><a href="#">My returns</a></li>
+                    <li><a href="https://moustashbique.free.nf/mon-compte/">My account</a></li>
+                    <li><a href="https://moustashbique.free.nf/mon-compte/customer-logout/">Logout</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Information</h4>
+                <ul>
+                    <li><a href="https://moustashbique.free.nf/about-us/">About us</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="https://moustashbique.free.nf/blog/">Blog</a></li>
+                    <li><a href="https://moustashbique.free.nf/contact-us/">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h4>Newsletter</h4>
+                <p>Subscribe to get notified about product launches, special offers and company news.</p>
+                <!-- Remplacer le formulaire HTML par le shortcode WordPress -->
+                <form action="">
+                    <input id="newsletter-input" type="email"><button id="newsletter-button">S'inscrire</button>
+                </form>
+            </div>
+        </div>
+        <div class="social-icons">
+            <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://linkedin.com" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+        </div>
+        <div class="payment-icons">
+            <i class="fab fa-cc-visa"></i>
+            <i class="fab fa-cc-mastercard"></i>
+            <i class="fab fa-cc-paypal"></i>
+            <i class="fab fa-cc-stripe"></i>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 UX Themes</p>
+            <ul>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+    </div>
+    
+
+
+    <!-- ====== Custom Script ====== -->
+    <script>
+
+            const navList = document.querySelector(".nav-list");
+
+          document.querySelector(".open").onclick = () => {
+          navList.classList.add("show");
+          };
+
+          document.querySelector(".close").onclick = () => {
+          navList.classList.remove("show");
+        };
+
+          document.addEventListener('DOMContentLoaded', function () {
+            const dropdowns = document.querySelectorAll('.dropdown');
+
+            dropdowns.forEach(dropdown => {
+                dropdown.addEventListener('mouseenter', function () {
+                    const popup = this.querySelector('.info-popup');
+                    popup.style.display = 'block';
+                });
+
+                dropdown.addEventListener('mouseleave', function () {
+                    const popup = this.querySelector('.info-popup');
+                    setTimeout(() => {
+                        popup.style.display = 'none';
+                    }, 200); // Délai de 200 ms avant de cacher la popup
+                });
+
+                // Ajout d'un clic pour maintenir la popup ouverte
+                dropdown.addEventListener('click', function (e) {
+                    e.stopPropagation(); // Empêche la fermeture par un clic en dehors
+                    const popup = this.querySelector('.info-popup');
+                    popup.style.display = popup.style.display === 'block' ? 'none' : 'block';
+                });
+
+                // Cacher la popup quand on clique n'importe où ailleurs sur la page
+                document.addEventListener('click', function () {
+                    const popup = dropdown.querySelector('.info-popup');
+                    if (popup) {
+                        popup.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+/*
+        var swiper1 = new Swiper('.line1', {
+            slidesPerView: 4,  // Affiche 4 produits par vue
+            spaceBetween: 10,  // Espacement entre les produits
+            loop: true,  // Le défilement boucle automatiquement
+            autoplay: {
+                delay: 3000,  // Délai de 3 secondes avant de passer au slide suivant
+                disableOnInteraction: false,  // Autoplay continue même après une interaction
+            },
+        });
+        
+        var swiper2 = new Swiper('.line2', {
+            slidesPerView: 4,  // Affiche 4 produits par vue
+            spaceBetween: 10,  // Espacement entre les produits
+            loop: true,  // Le défilement boucle automatiquement
+            autoplay: {
+                delay: 3000,  // Délai de 3 secondes avant de passer au slide suivant
+                disableOnInteraction: false,  // Autoplay continue même après une interaction
+            },
+        });
+        */
+  </script>
+</body>
+</html>

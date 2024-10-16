@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="cart-container">
+
+    {% for order in orders %}
+        <div class="cart-item">
+            <h2 class="product-name">{{ order.product.name }}</h2>
+            <img src="{{ order.product.thumbnail.url }}" alt="{{ order.product.name }}" class="product-image">
+            <p class="product-quantity">{{ order.quantity }} dans le panier</p>
+            <p class="product-price">Prix : {{ order.product.price }} €</p>
+        </div>
+    {% endfor %}
+
+    <div class="cart-summary">
+        <p class="total-price">Total : {{ total }} €</p>
+        <div class="e-flex">
+            <a href="{% url 'delete-cart' %}" class="delete-cart-btn">Supprimer le panier</a>
+            <p><a href="{% url 'checkout' %}" class="checkout-btn">Payer</a></p>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+   
+    <div class="header-section">
+    <div class="roow">
+        <div class="col-2">
+            <h1>Donner à votre environnement un nouveau style</h1>
+            <p>le succès n'est pas toujous une question de grandeur. c'est une question de cohérence</p>
+            <a href="#veddete">Découvrir</a>
+        </div>
+        <div class="col-2">
+            <img src="{% static 'images/desktop.jpeg' %}" alt="">
+        </div>
+    </div>
+    </div>
+ </div>
+
+
+  <!--Section des categories-->
+  <section class="categories">
+    <div class="containner">
+        <h2 id="veddete">Catégories en Veddetes</h2>
+        <div class="veddete">
+            
+                <div class="col-3">
+                    <a href="{{category1.get_absolute_url}}"><img src="{{category1.thumbnail.url}}" alt="{{category1.name}}"></a>
+                    <a href="{{category1.get_absolute_url}}"><button class="voir">Voir</button></a>
+                </div>
+
+                <div class="col-3">
+                    <a href="{{category2.get_absolute_url}}"><img src="{{category2.thumbnail.url}}" alt="{{category2.name}}"></a>
+                    <a href="{{category2.get_absolute_url}}"><button class="voir">Voir</button></a>
+                </div>
+
+                <div class="col-3">
+                    <a href="{{category3.get_absolute_url}}"><img src="{{category3.thumbnail.url}}" alt="{{category3.name}}"></a>
+                    <a href="{{category3.get_absolute_url}}"><button class="voir">Voir</button></a>
+                </div>
+            
+        </div>
+    </div>
+    </section>
+    <!--Section des produits-->
+    <section class="featured-products">
+        <div class="containner">
+            <h2>Meilleurs Produits</h2>
+            <div class="veddete">
+                {% for product in bestProducts %}
+                    <div class="col-4">
+                        <a href="{{product.get_absolute_url}}"><img src="{{product.thumbnail.url}}" alt="{{product.name}}"></a>
+                        <h3>{{product.name}}</h3>
+                        <p>{{product.price}} €</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+      </section>
+
+        <!--Nos derniers produits-->
+
+        <section class="featured-products">
+            <div class="containner swiper-container line1">
+                <h2>Nos derniers produits</h2>
+                <div class="veddete swiper-wrapper">
+                    {% for product in products_line1 %}
+                        <div class="col-4 swiper-slide">
+                            <a href="{{product.get_absolute_url}}"><img src="{{product.thumbnail.url}}" alt="{{product.name}}"></a>
+                            <h3>{{product.name}}</h3>
+                            <p>{{product.price}} €</p>
+                        </div>
+                    {% endfor %}
+                </div>    
+            </div>
+
+            <div class="containner swiper-container line2">
+                <div class="veddete swiper-wrapper">
+                    {% for product in products_line2 %}
+                        <div class="col-4 swiper-slide">
+                            <a href="{{product.get_absolute_url}}"><img src="{{product.thumbnail.url}}" alt="{{product.name}}"></a>
+                            <h3>{{product.name}}</h3>
+                            <p>{{product.price}} €</p>
+                        </div>
+                    {% endfor %}
+                </div>    
+            </div>
+          </section>
+
+
+
+<ul>
+    {% if products.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{products.previous_page_number }}">Précédent</a>
+        </li>
+    {% endif %}
+
+        <li class="page-item active">
+            <a class="page-link" href="?page={{products.number}}">{{products.number}}</a>
+        </li>
+
+    {% if products.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{products.next_page_number }}">Suivant </a>
+        </li>
+    {% endif %}
+</ul>    
+
+{% endblock %}
+

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="payment-container">
+
+    <h1 class="page-title">Page de Paiement</h1>
+
+    <div class="order-summary">
+        <h3>Résumé de votre commande</h3>
+        <ul class="order-list">
+            {% for item in orders %}
+                <li class="order-item">
+                    <img src="{{item.product.thumbnail.url}}" alt="{{item.product.name}}" class="product-thumbnail">
+                    <span>{{ item.product.name }} - {{ item.quantity }} x {{ item.product.price }} €</span>
+                </li>
+            {% endfor %}
+        </ul>
+        <p class="total-amount">Total : <strong>{{ total }} €</strong></p>
+    </div>
+
+    <!-- Bouton de paiement PayPal 
+    <div class="paypal-container">
+        <form action="{% url 'process_paypal' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="total" value="{{ total }}">
+            <script src="https://www.paypal.com/sdk/js?client-id=TON_CLIENT_ID"></script>
+            <div id="paypal-button-container">
+                <button type="submit" class="paypal-button">Payer avec PayPal</button>
+            </div>    
+        </form>
+    </div>
+-->
+
+    <h1>Processus de paiement</h1>
+    
+    <!-- Div où le bouton PayPal sera rendu -->
+    <div id="paypal-button-container"></div>
+
+    <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=EUR"></script>
+
+    <script>
+        // Création du bouton PayPal
+        paypal.Buttons({
+            // La fonction de création de paiement
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: "{{total}}"  // Le montant total
+                        }
+                    }]
+                });
+            },
+            // Fonction de capture du paiement après approbation
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    // Rediriger vers une page de succès
+                    window.location.href = "/payment-success";
+                });
+            },
+            // Gestion de l'annulation du paiement
+            onCancel: function (data) {
+                // Rediriger vers une page d'annulation
+                window.location.href = "/payment-cancel";
+            },
+            // Gestion des erreurs
+            onError: function (err) {
+                console.log(err);
+                // Afficher une erreur ou rediriger vers une page d'erreur
+                window.location.href = "/payment-error";
+            }
+        }).render('#paypal-button-container');  // Rendre le bouton dans le conteneur div
+    </script>
+
+
+
+</div>
+
+
+{% endblock content %}
