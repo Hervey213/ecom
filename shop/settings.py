@@ -76,6 +76,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'shop.wsgi.application'
 
+import environ
+env = environ.Env()
+environ.Env.read_env()  # Charger les variables d'un fichier .env si nécessaire
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
